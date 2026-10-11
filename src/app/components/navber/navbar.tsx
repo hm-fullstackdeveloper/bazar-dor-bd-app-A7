@@ -10,7 +10,7 @@ import {
 } from "../../lib/api";
 import type { Category } from "../../types/product";
 import { authClient , useSession } from "@/app/lib/auth-client";
-// import { authClient } from "@/app/lib/auth-client";
+
 
 // Price ticker type
 type TickerItem = {

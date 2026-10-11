@@ -10,8 +10,7 @@ import type { Product } from "../../types/product";
 
 // ==================== HELPERS ====================
 
-const formatPrice = (price: number) =>
-  price.toLocaleString("bn-BD");
+const formatPrice = (price: number) => price.toLocaleString("bn-BD");
 
 const unitName: Record<string, string> = {
   kg: "কেজি",
@@ -37,30 +36,32 @@ function isImageUrl(image: string) {
 // ==================== PRODUCT CARD ====================
 
 function ProductCard({ product }: { product: Product }) {
-  const isUp = product.change.dir === "up";
-  const isDown = product.change.dir === "down";
+  const direction = product.change?.dir ?? "flat";
+  const percentage = product.change?.pct ?? 0;
 
-  const changeColor = isUp
-    ? "bg-red-50 text-red-700"
-    : isDown
-      ? "bg-green-50 text-green-700"
-      : "bg-gray-100 text-gray-600";
+  const changeColor =
+    direction === "up"
+      ? "bg-red-50 text-red-600"
+      : direction === "down"
+        ? "bg-green-50 text-green-700"
+        : "bg-gray-100 text-gray-600";
 
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-3 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md sm:p-4"
+      aria-label={`${product.nameBn} পণ্যের বিস্তারিত দেখুন`}
+      className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-green-200 hover:shadow-lg sm:p-5"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-green-50 text-3xl sm:size-14">
-          {isImageUrl(product.image) ? (
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-green-50 text-4xl sm:size-[72px]">
+          {isImageUrl(product.image || "") ? (
             <Image
               src={product.image}
               alt={product.nameBn}
-              width={56}
-              height={56}
-              sizes="56px"
-              className="size-full object-contain"
+              width={72}
+              height={72}
+              sizes="72px"
+              className="size-full object-contain p-1"
             />
           ) : (
             <span aria-hidden="true">
@@ -70,35 +71,50 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         <span
-          className={`rounded-full px-2 py-1 text-xs font-bold ${changeColor}`}
-          aria-label={`দামের পরিবর্তন ${formatPrice(
-            Math.abs(product.change.pct)
-          )} শতাংশ`}
+          className={`shrink-0 rounded-full px-2.5 py-1.5 text-xs font-bold ${changeColor}`}
+          aria-label={`দামের পরিবর্তন ${formatPrice(Math.abs(percentage))} শতাংশ`}
         >
-          {isUp ? "▲" : isDown ? "▼" : "—"}{" "}
-          {formatPrice(Math.abs(product.change.pct))}%
+          {direction === "up" ? "▲" : direction === "down" ? "▼" : "—"}{" "}
+          {formatPrice(Math.abs(percentage))}%
         </span>
       </div>
 
-      <h3 className="mt-4 font-bold text-gray-900 transition group-hover:text-green-700">
-        {product.nameBn}
-      </h3>
+      <div className="mt-4">
+        <h3 className="line-clamp-2 min-h-12 text-base font-bold leading-6 text-gray-900 transition-colors group-hover:text-green-700 sm:text-lg">
+          {product.nameBn}
+        </h3>
 
-      <p className="mt-1 text-sm text-gray-500">
-        প্রতি {getUnitName(product.unit)}
-      </p>
+        <p className="mt-1 text-sm text-gray-500">
+          প্রতি {getUnitName(product.unit)}
+        </p>
+      </div>
 
-      <div className="mt-auto border-t border-gray-100 pt-3">
-        <p className="text-xs text-gray-500">আজকের দাম</p>
+      <div className="mt-auto border-t border-gray-100 pt-4">
+        <p className="text-sm text-gray-500">আজকের দাম</p>
 
-        <p className="mt-1 text-xl font-extrabold text-gray-900">
+        <p className="mt-1 text-2xl font-extrabold text-gray-900">
           {formatPrice(product.today)}{" "}
-          <span className="text-sm font-medium">টাকা</span>
+          <span className="text-sm font-semibold text-gray-600">
+            টাকা
+          </span>
         </p>
 
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-sm text-gray-500">
           গতকাল: {formatPrice(product.yesterday)} টাকা
         </p>
+
+        <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-3">
+          <span className="text-sm font-medium text-green-700">
+            বিস্তারিত দেখুন
+          </span>
+
+          <span
+            aria-hidden="true"
+            className="text-lg text-green-700 transition-transform duration-300 group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -110,20 +126,24 @@ function ProductSkeleton() {
   return (
     <div
       aria-hidden="true"
-      className="animate-pulse rounded-2xl border border-gray-100 bg-white p-3 sm:p-4"
+      className="animate-pulse rounded-2xl border border-gray-100 bg-white p-4 sm:p-5"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="size-12 rounded-xl bg-gray-200 sm:size-14" />
-        <div className="h-6 w-14 rounded-full bg-gray-200" />
+      <div className="flex items-start justify-between gap-3">
+        <div className="size-16 rounded-2xl bg-gray-200 sm:size-[72px]" />
+        <div className="h-7 w-16 rounded-full bg-gray-200" />
       </div>
 
-      <div className="mt-4 h-4 w-2/3 rounded bg-gray-200" />
-      <div className="mt-3 h-3 w-1/3 rounded bg-gray-100" />
+      <div className="mt-5 h-5 w-3/4 rounded bg-gray-200" />
+      <div className="mt-3 h-4 w-1/3 rounded bg-gray-100" />
 
-      <div className="mt-6 border-t border-gray-100 pt-3">
-        <div className="h-3 w-1/3 rounded bg-gray-100" />
-        <div className="mt-2 h-6 w-1/2 rounded bg-gray-200" />
-        <div className="mt-3 h-3 w-2/3 rounded bg-gray-100" />
+      <div className="mt-6 border-t border-gray-100 pt-4">
+        <div className="h-4 w-1/3 rounded bg-gray-100" />
+        <div className="mt-3 h-7 w-2/3 rounded bg-gray-200" />
+        <div className="mt-3 h-4 w-3/4 rounded bg-gray-100" />
+
+        <div className="mt-5 border-t border-gray-100 pt-3">
+          <div className="h-4 w-1/2 rounded bg-gray-100" />
+        </div>
       </div>
     </div>
   );
@@ -138,7 +158,6 @@ export default function ProductSections() {
 
   const loadProducts = useCallback(async (signal?: AbortSignal) => {
     try {
-      setLoading(true);
       setError("");
 
       const data = await getProducts();
@@ -158,25 +177,22 @@ export default function ProductSections() {
     }
   }, []);
 
- useEffect(() => {
-  const controller = new AbortController();
+  useEffect(() => {
+    const controller = new AbortController();
 
-  const run = async () => {
-    await loadProducts(controller.signal);
-  };
+    void loadProducts(controller.signal);
 
-  run();
+    return () => {
+      controller.abort();
+    };
+  }, [loadProducts]);
 
-  return () => {
-    controller.abort();
-  };
-}, [loadProducts]);
+  // ==================== FILTER PRODUCTS ====================
 
   const risingProducts = products
     .filter(
       (product) =>
-        product.change?.dir === "up" &&
-        product.change.pct > 0
+        product.change?.dir === "up" && product.change.pct > 0
     )
     .sort((a, b) => b.change.pct - a.change.pct)
     .slice(0, 6);
@@ -184,8 +200,7 @@ export default function ProductSections() {
   const fallingProducts = products
     .filter(
       (product) =>
-        product.change?.dir === "down" &&
-        product.change.pct !== 0
+        product.change?.dir === "down" && product.change.pct !== 0
     )
     .sort(
       (a, b) =>
@@ -193,37 +208,39 @@ export default function ProductSections() {
     )
     .slice(0, 6);
 
+  // ==================== RENDER SECTION ====================
+
   const renderSection = (
     title: string,
     subtitle: string,
     items: Product[],
     type: "up" | "down"
   ) => (
-    <section className="mb-12">
-      <div className="mb-5">
+    <section className="mb-12 sm:mb-14">
+      <div className="mb-6">
         <h2 className="text-xl font-extrabold text-gray-900 sm:text-2xl">
           {title}
         </h2>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-gray-500 sm:text-base">
           {subtitle}
         </p>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }, (_, index) => (
             <ProductSkeleton key={index} />
           ))}
         </div>
       ) : items.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {items.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="rounded-xl bg-gray-50 p-6 text-center text-sm text-gray-500">
+        <div className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-10 text-center text-sm text-gray-500">
           {type === "up"
             ? "এখন কোনো দাম বাড়ার তথ্য নেই।"
             : "এখন কোনো দাম কমার তথ্য নেই।"}
@@ -232,8 +249,10 @@ export default function ProductSections() {
     </section>
   );
 
+  // ==================== MAIN UI ====================
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
       {error ? (
         <div
           role="alert"
@@ -243,8 +262,11 @@ export default function ProductSections() {
 
           <button
             type="button"
-            onClick={() => void loadProducts()}
-            className="mt-4 rounded-lg bg-green-700 px-5 py-2.5 font-semibold text-white transition hover:bg-green-800"
+            onClick={() => {
+              setLoading(true);
+              void loadProducts();
+            }}
+            className="mt-4 rounded-xl bg-green-700 px-5 py-3 font-semibold text-white transition hover:bg-green-800"
           >
             আবার চেষ্টা করো
           </button>
