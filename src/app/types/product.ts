@@ -1,4 +1,5 @@
 
+// Product Type
 export type Product = {
   id: number;
   slug: string;
@@ -12,14 +13,24 @@ export type Product = {
   yesterday: number;
   lastWeek: number;
   lastMonth: number;
+
   change: {
     dir: "up" | "down" | "flat";
     pct: number;
   };
+
   markets?: {
     market: string;
     division: string;
     min: number;
     max: number;
   }[];
+};
+
+// Category Type
+export type Category = {
+  id: number | string;
+  slug: string;
+  nameBn: string;
+  icon?: string;
 };

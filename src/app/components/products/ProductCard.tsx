@@ -1,6 +1,7 @@
 
 import Link from "next/link";
-import type { Product } from "./products.types";
+// import type { Product } from "./products.types";
+import type { Product } from "../../lib/api";
 
 type ProductCardProps = {
   product: Product;
