@@ -16,14 +16,31 @@ import {
 import type { Category } from "../../types/product";
 
 function extractCategories(result: unknown): Category[] {
-  if (!result || typeof result !== "object") {
-    return Array.isArray(result) ? (result as Category[]) : [];
+  // API সরাসরি array দিলে
+  let data: unknown = result;
+
+  if (Array.isArray(data)) {
+    // data আগেই array
+  } else if (data && typeof data === "object") {
+    const response = data as Record<string, unknown>;
+
+    data = response.categories ?? response.data ?? [];
+
+    // { data: { categories: [...] } } হলে
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      const nested = data as Record<string, unknown>;
+      data = nested.categories ?? nested.data ?? [];
+    }
+  } else {
+    return [];
   }
 
-  const response = result as Record<string, unknown>;
-  const data = response.categories ?? response.data;
+  if (!Array.isArray(data)) {
+    console.log("Unexpected category response structure:", result);
+    return [];
+  }
 
-  if (!Array.isArray(data)) return [];
+  console.log("Raw category items:", data);
 
   return data.filter((item): item is Category => {
     if (!item || typeof item !== "object") return false;
@@ -61,11 +78,23 @@ function getBangladeshDate() {
 
     async function loadCategories() {
       try {
-        const result = await fetchApi<unknown>(
-          API_BASE_URL_MAIN_CATEGORIES
-        );
+const result = await fetchApi<unknown>(
+  API_BASE_URL_MAIN_CATEGORIES
+);
 
-        const data = extractCategories(result);
+// API থেকে আসা সম্পূর্ণ ডেটা
+console.log("1. Category API URL:", API_BASE_URL_MAIN_CATEGORIES);
+console.log("2. Full API Response:", result);
+
+// Extract করা Category data
+const data = extractCategories(result);
+
+console.log("3. Extracted Categories:", data);
+console.log("4. Total Categories:", data.length);
+
+// প্রতিটি Category-এর বিস্তারিত
+console.table(data);
+
 
         if (!cancelled) {
           setCategories(data);

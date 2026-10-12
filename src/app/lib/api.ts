@@ -2,9 +2,11 @@
 import type { Product, Category } from "../types/product";
 
 // API BASE URL
-
 export const API_BASE_URL_MAIN =
-  "https://openapi.programming-hero.com/api/bazardor";
+  "https://api.api-store.workers.dev/api/bazardor";
+
+const API_BASE_URL_FALLBACK =
+  "https://api.abcz.workers.dev/api/bazardor";
 
 export const API_BASE_URL_MAIN_CATEGORIES =
   `${API_BASE_URL_MAIN}/categories`;
@@ -12,102 +14,123 @@ export const API_BASE_URL_MAIN_CATEGORIES =
 export const API_BASE_URL_MAIN_PRODUCTS =
   `${API_BASE_URL_MAIN}/products`;
 
-// REUSABLE API FETCH FUNCTION
-
-const RETRY_DELAYS = [1000, 2000];
+const RETRY_DELAYS = [500, 1000];
 
 const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-export async function fetchApi<T>(url: string): Promise<T> {
-  for (let attempt = 0; ; attempt++) {
-    const response = await fetch(url, {
-      next: { revalidate: 300 },
-    });
-
-    // Retry only when rate-limited
-    if (response.status === 429 && attempt < RETRY_DELAYS.length) {
-      await sleep(RETRY_DELAYS[attempt]);
-      continue;
-    }
-
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
-    }
-
-    return (await response.json()) as T;
+// FALLBACK URL তৈরি
+function getFallbackUrl(url: string): string | null {
+  if (url.startsWith(API_BASE_URL_MAIN)) {
+    return url.replace(
+      API_BASE_URL_MAIN,
+      API_BASE_URL_FALLBACK
+    );
   }
+
+  return null;
 }
 
-// EXTRACT PRODUCTS FROM RESPONSE
+// REUSABLE API FETCH FUNCTION
+export async function fetchApi<T>(url: string): Promise<T> {
+  const fallbackUrl = getFallbackUrl(url);
+  const urls = fallbackUrl ? [url, fallbackUrl] : [url];
 
-function extractProducts(result: unknown): Product[] {
+  let lastError: unknown;
+
+  for (const currentUrl of urls) {
+    for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+      try {
+        const response = await fetch(currentUrl, {
+          cache: "no-store",
+        });
+
+        if (
+          (response.status === 429 || response.status >= 500) &&
+          attempt < RETRY_DELAYS.length
+        ) {
+          await sleep(RETRY_DELAYS[attempt]);
+          continue;
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            `API request failed: ${response.status} (${currentUrl})`
+          );
+        }
+
+        return (await response.json()) as T;
+      } catch (error) {
+        lastError = error;
+
+        // HTTP error হলে একই URL বারবার চেষ্টা না করে পরের URL দেখব।
+        if (
+          error instanceof Error &&
+          error.message.startsWith("API request failed:")
+        ) {
+          break;
+        }
+
+        if (attempt < RETRY_DELAYS.length) {
+          await sleep(RETRY_DELAYS[attempt]);
+        }
+      }
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("API request failed. Please try again.");
+}
+
+// RESPONSE থেকে ARRAY বের করা
+function extractArray(result: unknown): unknown[] {
   if (Array.isArray(result)) {
-    return result as Product[];
+    return result;
   }
 
   if (!result || typeof result !== "object") {
     return [];
   }
 
-  const data = result as {
-    products?: Product[];
-    data?: Product[] | { products?: Product[] };
-  };
+  const response = result as Record<string, unknown>;
 
-  if (Array.isArray(data.products)) {
-    return data.products;
+  // { products: [...] } অথবা { categories: [...] }
+  if (Array.isArray(response.products)) {
+    return response.products;
   }
 
-  if (Array.isArray(data.data)) {
-    return data.data;
+  if (Array.isArray(response.categories)) {
+    return response.categories;
   }
 
-  if (
-    data.data &&
-    typeof data.data === "object" &&
-    Array.isArray(data.data.products)
-  ) {
-    return data.data.products;
+  // { data: [...] } অথবা nested data
+  if (response.data !== undefined) {
+    return extractArray(response.data);
   }
 
   return [];
 }
 
 // GET ALL PRODUCTS
-
 export async function getProducts(): Promise<Product[]> {
   const result = await fetchApi<unknown>(
     API_BASE_URL_MAIN_PRODUCTS
   );
 
-  return extractProducts(result);
+  return extractArray(result) as Product[];
 }
 
 // GET ALL CATEGORIES
-
 export async function getCategories(): Promise<Category[]> {
   const result = await fetchApi<unknown>(
     API_BASE_URL_MAIN_CATEGORIES
   );
 
-  if (Array.isArray(result)) {
-    return result as Category[];
-  }
-
-  if (result && typeof result === "object" && "data" in result) {
-    const data = (result as { data: unknown }).data;
-
-    if (Array.isArray(data)) {
-      return data as Category[];
-    }
-  }
-
-  return [];
+  return extractArray(result) as Category[];
 }
 
 // GET PRODUCTS BY CATEGORY
-
 export async function getProductsByCategory(
   category = "chal"
 ): Promise<Product[]> {
@@ -116,24 +139,34 @@ export async function getProductsByCategory(
 
   const result = await fetchApi<unknown>(url);
 
-  return extractProducts(result);
+  return extractArray(result) as Product[];
 }
 
 // GET PRODUCT BY ID
-
 export async function getProductById(
   id: number | string
 ): Promise<Product> {
-  const result = await fetchApi<unknown>(
-    `${API_BASE_URL_MAIN_PRODUCTS}/${encodeURIComponent(String(id))}`
-  );
+  const url =
+    `${API_BASE_URL_MAIN_PRODUCTS}/${encodeURIComponent(String(id))}`;
 
-  if (
-    result &&
-    typeof result === "object" &&
-    "data" in result
-  ) {
-    return (result as { data: Product }).data;
+  const result = await fetchApi<unknown>(url);
+
+  if (result && typeof result === "object") {
+    const response = result as Record<string, unknown>;
+    const data = response.data;
+
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      const nested = data as Record<string, unknown>;
+
+      if (
+        nested.product &&
+        typeof nested.product === "object"
+      ) {
+        return nested.product as Product;
+      }
+
+      return data as Product;
+    }
   }
 
   return result as Product;

@@ -1,5 +1,6 @@
+
 import { getCategories, getProductsByCategory } from "../../lib/api";
-import type { Product,  Category } from "../../types/product";
+import type { Product, Category } from "../../types/product";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -16,9 +17,9 @@ function formatPrice(price: number) {
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
 
+  let categories: Category[] = [];
+  let products: Product[] = [];
 
-let categories: Category[] = [];
-let products: Product[] = [];
   try {
     categories = await getCategories();
     products = await getProductsByCategory(slug);
@@ -33,98 +34,83 @@ let products: Product[] = [];
   }
 
   return (
-    <main className="min-h-screen bg-[#f5f8f5]">
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* Category Banner */}
-        <section className="rounded-2xl border border-green-100 bg-white p-6 shadow-sm sm:p-8">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-green-50 text-4xl">
-              {category.icon || "🛒"}
-            </div>
+    <main className="min-h-screen bg-[#f0f5f0]">
+      <div className="mx-auto max-w-5xl px-3 py-5 sm:px-5 sm:py-7">
 
-            <div>
-              <p className="mb-1 text-sm text-gray-500">
-                বাজার দর / ক্যাটাগরি
-              </p>
+        {/* Category Header */}
+        <section className="flex items-center gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f3f6f2] text-2xl">
+            {category.icon || "🛒"}
+          </div>
 
-              <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">
-                {category.nameBn}
-              </h1>
+          <div>
+            <h1 className="text-lg font-bold text-gray-800">
+              {category.nameBn}
+            </h1>
 
-              <p className="mt-2 text-sm text-gray-500">
-                {category.nameBn} বিভাগের বাজারদর ও পণ্যের সর্বশেষ তথ্য
-              </p>
-            </div>
+            <p className="text-xs text-gray-500">
+              {formatPrice(products.length)}টি পন্যের আজকের দাম ও পরিবর্তন
+            </p>
           </div>
         </section>
 
         {/* Product Heading */}
-        <section className="mt-8">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                {category.nameBn} এর পণ্যসমূহ
-              </h2>
+        <section className="mt-3">
+          <div className="mb-3 flex items-center justify-between rounded-xl border border-gray-100 bg-white px-4 py-3">
+            <p className="text-xs text-gray-500">
+              মোট {formatPrice(products.length)}টি পণ্য দেখানো হচ্ছে
+            </p>
 
-              <p className="mt-1 text-sm text-gray-500">
-                মোট {formatPrice(products.length)} টি পণ্য
-              </p>
-            </div>
-
-            <span className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600">
+            <span className="rounded-md bg-[#f2f6f2] px-3 py-1 text-xs font-medium text-gray-600">
               আজকের বাজারদর
             </span>
           </div>
 
           {/* Product Cards */}
           {products.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {products.map((product) => (
                 <Link
                   key={product.id}
                   href={`/product/${product.slug}`}
-                  className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                  className="group rounded-xl border border-gray-100 bg-white p-3 transition hover:border-green-200 hover:shadow-sm"
                 >
-                  <div className="flex h-48 items-center justify-center bg-[#f7f9f6] p-4">
-                    {product.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={product.image}
-                        alt={product.nameBn}
-                        className="h-full w-full object-contain transition group-hover:scale-105"
-                      />
-                    ) : (
-                      <span className="text-6xl">
-                        {product.categoryIcon || "🛒"}
-                      </span>
-                    )}
+                  {/* Product Name */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f3f6f2] text-xl">
+                      {product.categoryIcon || "🛒"}
+                    </div>
+
+                    <div className="min-w-0">
+                      <h2 className="truncate text-sm font-bold text-gray-800">
+                        {product.nameBn}
+                      </h2>
+
+                      <p className="text-[10px] text-gray-500">
+                        {product.categoryNameBn || category.nameBn}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="p-5">
-                    <p className="text-xs font-medium text-green-700">
-                      {product.categoryNameBn || category.nameBn}
+                  {/* Price */}
+                  <div className="mt-3">
+                    <p className="text-[10px] text-gray-500">
+                      বর্তমান বাজারদর
                     </p>
 
-                    <h3 className="mt-2 text-lg font-bold text-gray-900">
-                      {product.nameBn}
-                    </h3>
-
-                    <div className="mt-4 flex items-end justify-between gap-3">
-                      <div>
-                        <p className="text-xs text-gray-500">
-                          বর্তমান দাম
-                        </p>
-
-                        <p className="mt-1 text-2xl font-extrabold text-green-700">
-                          ৳{formatPrice(product.today)}
-                          <span className="ml-1 text-sm font-normal text-gray-500">
-                            /{product.unit}
-                          </span>
-                        </p>
-                      </div>
+                    <div className="mt-1 flex items-center justify-between gap-2">
+                      <p className="text-base font-extrabold text-gray-800">
+                        {formatPrice(product.today)}{" "}
+                        <span className="text-xs font-medium">
+                          টাকা
+                        </span>
+                        <span className="ml-1 text-[10px] font-normal text-gray-500">
+                          /{product.unit}
+                        </span>
+                      </p>
 
                       <span
-                        className={`rounded-lg px-3 py-2 text-sm font-bold ${
+                        className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-bold ${
                           product.change.dir === "up"
                             ? "bg-red-50 text-red-600"
                             : product.change.dir === "down"
@@ -140,39 +126,36 @@ let products: Product[] = [];
                         {formatPrice(product.change.pct)}%
                       </span>
                     </div>
+                  </div>
 
-                    <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4 text-sm">
-                      <span className="text-gray-500">
-                        গতকালের দাম
-                      </span>
+                  {/* Yesterday Price */}
+                  <div className="mt-2 flex items-center justify-between border-t border-gray-100 pt-2">
+                    <span className="text-[10px] text-gray-500">
+                      গতকালের দাম
+                    </span>
 
-                      <span className="font-semibold text-gray-700">
-                        ৳{formatPrice(product.yesterday)}
-                      </span>
-                    </div>
-
-                    <p className="mt-4 text-sm font-semibold text-green-700">
-                      বিস্তারিত দেখুন →
-                    </p>
+                    <span className="text-xs font-semibold text-gray-700">
+                      {formatPrice(product.yesterday)} টাকা
+                    </span>
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-gray-100 bg-white px-5 py-16 text-center">
-              <p className="text-4xl">📦</p>
+            <div className="rounded-xl border border-gray-100 bg-white px-4 py-10 text-center">
+              <p className="text-3xl">📦</p>
 
-              <h3 className="mt-4 text-lg font-bold text-gray-800">
+              <h3 className="mt-3 text-sm font-bold text-gray-800">
                 এই ক্যাটাগরিতে কোনো পণ্য পাওয়া যায়নি
               </h3>
 
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-xs text-gray-500">
                 API-তে এই ক্যাটাগরির পণ্য আছে কি না, তা পরীক্ষা করতে হবে।
               </p>
 
               <Link
                 href="/"
-                className="mt-5 inline-block rounded-lg bg-green-700 px-5 py-3 text-sm font-semibold text-white hover:bg-green-800"
+                className="mt-4 inline-block rounded-lg bg-green-700 px-4 py-2 text-xs font-semibold text-white hover:bg-green-800"
               >
                 হোম পেজে ফিরে যান
               </Link>
