@@ -139,7 +139,7 @@
 
 "use client";
 
-import { signIn, signUp } from "@/app/lib/auth-client";
+import { signIn } from "@/app/lib/auth-client";
 import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 
 
@@ -161,6 +161,21 @@ const SignInFromPage = () => {
     console.log('Full Data Messege',resData,error)
     // alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
   };
+  const handelGoogleSign = async() => {
+      const resData = await signIn.social({
+        provider: 'google',
+
+      })
+      console.log('Data Analaisis google',resData)
+    }
+
+    const handelGithubSign = async() => {
+      const restData = await signIn.social({
+        provider: 'github',
+
+      })
+      console.log('Data Analaisis github',restData)
+    }
 
     return (
         <div>
@@ -215,6 +230,14 @@ const SignInFromPage = () => {
         </Button>
       </div>
     </Form>
+    <p>
+      <Button onClick={handelGoogleSign}>
+        Sihn In With Google
+        </Button>
+        <Button onClick={handelGithubSign}>
+        Sihn In With Github
+        </Button>
+        </p>
         </div>
     );
 };

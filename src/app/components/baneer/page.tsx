@@ -5,7 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function baneerPage() {
+
+
+export default function BaneerPage() {
   const [currentDate, setCurrentDate] = useState("");
 
   useEffect(() => {

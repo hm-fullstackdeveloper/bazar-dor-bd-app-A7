@@ -1,60 +1,3 @@
-// import { betterAuth } from "better-auth";
-// import { MongoClient } from "mongodb";
-// import { mongodbAdapter } from "@better-auth/mongo-adapter";
-
-// // const client = new MongoClient("process.env.BETTER_AUTH_USER_NEXT_URL");
-// const client = new MongoClient(
-//   process.env.BETTER_AUTH_USER_NEXT_URL!
-// );
-// const db = client.db("bazar_dor_project");
-
-
-// export const auth = betterAuth({
-//      emailAndPassword: { 
-//     enabled: true, 
-//   }, 
-//   database: mongodbAdapter(db, {
-//     client,
-//   }),
-// });
-
-
-
-
-
-
-
-
-// import { betterAuth } from "better-auth";
-// import { MongoClient } from "mongodb";
-// import { mongodbAdapter } from "@better-auth/mongo-adapter";
-
-// const mongoUri = process.env.BETTER_AUTH_USER_NEXT_URL;
-
-// if (!mongoUri) {
-//   throw new Error("MongoDB URI .env ফাইলে পাওয়া যায়নি");
-// }
-
-// const client = new MongoClient(mongoUri);
-// const db = client.db("bazar_dor_project");
-
-// export const auth = betterAuth({
-//   database: mongodbAdapter(db, {
-//     client,
-//   }),
-
-//   emailAndPassword: {
-//     enabled: true,
-    
-//   },
-// });
-
-
-
-
-
-
-
 
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
@@ -79,11 +22,44 @@ if (!globalForMongo.mongoClient) {
 
 const db = client.db("bazar_dor_project");
 
+console.log("Google OAuth env check:", {
+  clientIdExists: Boolean(process.env.BETTER_AUTH_GOOGLE_ID),
+  clientSecretExists: Boolean(process.env.BETTER_AUTH_GOOGLE_SECRET),
+
+
+});
+
+console.log("Google OAuth env check:", {
+  clientIdExists: Boolean(process.env.BETTER_AUTH_GITHUB_ID),
+  clientSecretExists: Boolean(process.env.
+    BETTER_AUTH_GITHUB_SECRET),
+    
+  });
+
+  
+
+
 export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
   emailAndPassword: {
     enabled: true,
+    
   },
+  
+   socialProviders: {
+        google: { 
+            clientId: process.env.BETTER_AUTH_GOOGLE_ID!, 
+            clientSecret: process.env.BETTER_AUTH_GOOGLE_SECRET!,
+        }, 
+        
+        
+        github : { 
+          clientId: process.env.BETTER_AUTH_GITHUB_ID!, 
+          clientSecret: process.env.BETTER_AUTH_GITHUB_SECRET!,
+        }, 
+        
+      },
+    
 });
