@@ -1,245 +1,244 @@
-
-// import Link from "next/link";
-
-// export default function SignInPage() {
-//   return (
-//     <main className="min-h-screen bg-[#f1f6f2] px-4 pt-[29px] text-[#29332d]">
-//       <div className="mx-auto w-full max-w-[334px]">
-//         {/* Page heading */}
-//         <header className="mb-[19px] text-center">
-//           <h1 className="text-[20px] font-bold leading-[29px]">
-//             সাইন ইন
-//           </h1>
-
-//           <p className="mt-[3px] text-[11px] leading-[17px] text-[#78817b]">
-//             বিস্তারিত দাম, বাজার তুলনা ও অফার পেতে অ্যাকাউন্টে ঢুকুন
-//           </p>
-//         </header>
-
-//         {/* Sign in card */}
-//         <section className="rounded-[13px] border border-[#e0e8e1] bg-[#fbfdfb] px-[19px] pb-[20px] pt-[19px]">
-//           <form className="space-y-[12px]">
-//             {/* Email */}
-//             <div>
-//               <label
-//                 htmlFor="email"
-//                 className="mb-[4px] block text-[12px] font-medium"
-//               >
-//                 ইমেইল
-//               </label>
-
-//               <input
-//                 id="email"
-//                 name="email"
-//                 type="email"
-//                 placeholder="you@example.com"
-//                 autoComplete="email"
-//                 required
-//                 className="h-[33px] w-full rounded-[7px] border border-[#e2e9e3] bg-transparent px-[10px] text-[11px] outline-none transition focus:border-[#07883f]"
-//               />
-//             </div>
-
-//             {/* Password */}
-//             <div>
-//               <label
-//                 htmlFor="password"
-//                 className="mb-[4px] block text-[12px] font-medium"
-//               >
-//                 পাসওয়ার্ড
-//               </label>
-
-//               <input
-//                 id="password"
-//                 name="password"
-//                 type="password"
-//                 placeholder="কমপক্ষে ৮ অক্ষর"
-//                 autoComplete="current-password"
-//                 required
-//                 className="h-[33px] w-full rounded-[7px] border border-[#e2e9e3] bg-transparent px-[10px] text-[11px] outline-none transition focus:border-[#07883f]"
-//               />
-//             </div>
-
-//             {/* Sign in button */}
-//             <button
-//               type="submit"
-//               className="h-[34px] w-full rounded-[7px] bg-[#07883f] text-[12px] font-semibold text-white shadow-[0_3px_3px_rgba(0,0,0,0.20)] transition hover:bg-[#067636] active:translate-y-px"
-//             >
-//               সাইন ইন
-//             </button>
-//           </form>
-
-//           {/* Divider */}
-//           <div className="my-[12px] flex items-center gap-[12px]">
-//             <span className="h-px flex-1 bg-[#dfe5e0]" />
-
-//             <span className="shrink-0 text-[11px] text-[#68716b]">
-//               অথবা
-//             </span>
-
-//             <span className="h-px flex-1 bg-[#dfe5e0]" />
-//           </div>
-
-//           {/* Social sign in */}
-//           <div className="grid grid-cols-2 gap-[6px]">
-//             <button
-//               type="button"
-//               className="flex h-[33px] items-center justify-center gap-[5px] whitespace-nowrap rounded-[7px] border border-[#e2e9e3] text-[10px] font-semibold transition hover:bg-[#f1f6f2]"
-//             >
-//               <span className="text-[14px] font-bold text-[#4285f4]">
-//                 G
-//               </span>
-//               Google দিয়ে চালিয়ে যান
-//             </button>
-
-//             <button
-//               type="button"
-//               className="flex h-[33px] items-center justify-center gap-[5px] whitespace-nowrap rounded-[7px] border border-[#e2e9e3] text-[10px] font-semibold transition hover:bg-[#f1f6f2]"
-//             >
-//               <svg
-//                 viewBox="0 0 24 24"
-//                 width="13"
-//                 height="13"
-//                 fill="currentColor"
-//                 aria-hidden="true"
-//               >
-//                 <path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.3-1.24-1.65-1.24-1.65-1.02-.7.08-.69.08-.69 1.12.08 1.7 1.15 1.7 1.15 1 .1.77 2.1 3.16 1.6.1-.72.4-1.2.7-1.48-2.48-.28-5.1-1.24-5.1-5.52 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.1-2.96 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.45 3.08-1.15 3.08-1.15.6 1.54.22 2.68.1 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.62 5.24-5.12 5.52.4.34.75 1 .75 2.03v3.01c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z" />
-//               </svg>
-
-//               GitHub দিয়ে চালিয়ে যান
-//             </button>
-//           </div>
-
-//           {/* Create account */}
-//           <p className="mt-[13px] text-center text-[11px]">
-//             অ্যাকাউন্ট নেই?{" "}
-//             <Link
-//               href="/sign-up"
-//               className="font-medium text-[#07883f] hover:underline"
-//             >
-//               সাইন আপ করুন
-//             </Link>
-//           </p>
-//         </section>
-
-//         {/* Back to home */}
-//         <div className="mt-[18px] text-center">
-//           <Link
-//             href="/"
-//             className="text-[11px] text-[#818b84] transition hover:text-[#07883f]"
-//           >
-//             ← হোম পেজে ফিরে যান
-//           </Link>
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
-
-
-
 "use client";
 
 import { signIn } from "@/app/lib/auth-client";
-import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
-
+import {
+  Button,
+  Description,
+  FieldError,
+  Form,
+  Input,
+  Label,
+  TextField,
+} from "@heroui/react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
 const SignInFromPage = () => {
-    const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    // const data: Record<string, string> =  Object.fromEntries(formData.entries())
-    const data: Record<string, FormDataEntryValue> =  Object.fromEntries(formData.entries());
 
-    console.log('data from data', data)
-    const {data: resData, error} = await signIn.email({
-       
-        email: data.email as string,
-        password: data.password as string,
-        rememberMe: true,
-        callbackURL: "/"
-    })
-    console.log('Full Data Messege',resData,error)
+    const formData = new FormData(e.currentTarget);
+
+    // const data: Record<string, string> = Object.fromEntries(formData.entries())
+    const data: Record<string, FormDataEntryValue> = Object.fromEntries(
+      formData.entries()
+    );
+
+    console.log("data from data", data);
+
+    const { data: resData, error } = await signIn.email({
+      email: data.email as string,
+      password: data.password as string,
+      rememberMe: true,
+      callbackURL: "/",
+    });
+
+    console.log("Full Data Messege", resData, error);
+    if (error) {
+  toast.error(error.message || "লগ ইন সফল হয়নি!");
+} else {
+  toast.success("লগ ইন সফল সফল হয়েছে!");
+}
+
     // alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
   };
-  const handelGoogleSign = async() => {
-      const resData = await signIn.social({
-        provider: 'google',
 
-      })
-      console.log('Data Analaisis google',resData)
-    }
+  const handelGoogleSign = async () => {
+    const resData = await signIn.social({
+      provider: "google",
+    });
 
-    const handelGithubSign = async() => {
-      const restData = await signIn.social({
-        provider: 'github',
+    console.log("Data Analaisis google", resData);
+  };
 
-      })
-      console.log('Data Analaisis github',restData)
-    }
+  const handelGithubSign = async () => {
+    const restData = await signIn.social({
+      provider: "github",
+    });
 
-    return (
-        <div>
-           
-            <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
- 
-      <TextField
-        isRequired
-        name="email"
-        type="email"
-        validate={(value) => {
-          if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-            return "Please enter a valid email address";
-          }
-          return null;
-        }}
-      >
-        <Label>Email</Label>
-        <Input placeholder="Your Email" />
-        <FieldError />
-      </TextField>
-      <TextField
-        isRequired
-        minLength={8}
-        name="password"
-        type="password"
-        validate={(value) => {
-          if (value.length < 8) {
-            return "Password must be at least 8 characters";
-          }
-          if (!/[A-Z]/.test(value)) {
-            return "Password must contain at least one uppercase letter";
-          }
-          if (!/[0-9]/.test(value)) {
-            return "Password must contain at least one number";
-          }
-          return null;
-        }}
-      >
-        <Label>Password</Label>
-        <Input placeholder="Enter your password" />
-        <Description>Must be at least 8 characters with 1 uppercase and 1 number</Description>
-        <FieldError />
-      </TextField>
-      <div className="flex gap-2">
-        <Button type="submit">
-          {/* <Check /> */}
-          Submit
-        </Button>
-        <Button type="reset" variant="secondary">
-          Reset
-        </Button>
-      </div>
-    </Form>
-    <p>
-      <Button onClick={handelGoogleSign}>
-        Sihn In With Google
-        </Button>
-        <Button onClick={handelGithubSign}>
-        Sihn In With Github
-        </Button>
-        </p>
-        </div>
-    );
+    console.log("Data Analaisis github", restData);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#eff5f0] text-[#183126]">
+      <main className="flex min-h-screen flex-col">
+        {/* Sign In Section */}
+        <section className="flex flex-1 flex-col items-center justify-center px-4 py-10 sm:py-12">
+          {/* Heading */}
+          <div className="mb-6 text-center">
+            <div className="mb-2 flex items-center justify-center gap-2">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#008d46] text-2xl text-white shadow-sm">
+                🛒
+              </span>
+
+              <div className="text-left">
+                <h1 className="text-2xl font-extrabold tracking-tight text-[#173b29]">
+                  বাজার দর
+                </h1>
+
+                <p className="text-xs text-gray-500">
+                  বাংলাদেশের নিত্যদিনের বাজারদর
+                </p>
+              </div>
+            </div>
+
+            <h2 className="mt-7 text-2xl font-bold text-[#183126]">
+              সাইন ইন
+            </h2>
+
+            <p className="mt-2 text-sm text-gray-500">
+              নিরাপদে লগইন করুন, বাজার দর ও প্রয়োজনীয় তথ্য দেখুন।
+            </p>
+          </div>
+
+          {/* Sign In Card */}
+          <div className="w-full max-w-md rounded-2xl border border-[#e4ece6] bg-white p-6 shadow-sm sm:p-8">
+            <Form
+              className="flex w-full flex-col gap-5"
+              onSubmit={onSubmit}
+            >
+              {/* Email */}
+              <TextField
+                isRequired
+                name="email"
+                type="email"
+                validate={(value) => {
+                  if (
+                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+                      value
+                    )
+                  ) {
+                    return "সঠিক ইমেইল ঠিকানা লিখুন";
+                  }
+
+                  return null;
+                }}
+                className="w-full"
+              >
+                <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                  ইমেইল
+                </Label>
+
+                <Input
+                  placeholder="আপনার ইমেইল লিখুন"
+                  className="h-11 w-full rounded-lg border border-[#dce7df] bg-[#fbfdfb] px-3 text-sm outline-none transition focus-within:border-[#159957]"
+                />
+
+                <FieldError className="mt-1 text-xs text-red-500" />
+              </TextField>
+
+              {/* Password */}
+              <TextField
+                isRequired
+                minLength={8}
+                name="password"
+                type="password"
+                validate={(value) => {
+                  if (value.length < 8) {
+                    return "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে";
+                  }
+
+                  if (!/[A-Z]/.test(value)) {
+                    return "কমপক্ষে একটি ইংরেজি বড় হাতের অক্ষর দিন";
+                  }
+
+                  if (!/[0-9]/.test(value)) {
+                    return "কমপক্ষে একটি সংখ্যা দিন";
+                  }
+
+                  return null;
+                }}
+                className="w-full"
+              >
+                <Label className="mb-2 block text-sm font-semibold text-gray-700">
+                  পাসওয়ার্ড
+                </Label>
+
+                <Input
+                  placeholder="আপনার পাসওয়ার্ড লিখুন"
+                  className="h-11 w-full rounded-lg border border-[#dce7df] bg-[#fbfdfb] px-3 text-sm outline-none transition focus-within:border-[#159957]"
+                />
+
+                <Description className="mt-1 text-xs text-gray-500">
+                  কমপক্ষে ৮ অক্ষর, একটি বড় হাতের অক্ষর ও একটি সংখ্যা দিন।
+                </Description>
+
+                <FieldError className="mt-1 text-xs text-red-500" />
+              </TextField>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="flex h-11 w-full items-center justify-center rounded-lg bg-[#008d46] px-4 text-sm font-semibold text-white transition hover:bg-[#00783b]"
+              >
+                সাইন ইন করুন
+              </Button>
+
+              {/* Divider */}
+              <div className="flex w-full items-center gap-3">
+                <div className="h-px flex-1 bg-gray-200" />
+
+                <span className="text-xs text-gray-500">অথবা</span>
+
+                <div className="h-px flex-1 bg-gray-200" />
+              </div>
+
+              {/* Google & GitHub */}
+              <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+                <Button
+                  type="button"
+                  onClick={handelGoogleSign}
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#dce7df] bg-white px-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                >
+                  <span className="font-bold text-[#4285F4]">G</span>
+                  Google দিয়ে চালিয়ে যান
+                </Button>
+
+                <Button
+                  type="button"
+                  onClick={handelGithubSign}
+                  className="flex h-11 items-center justify-center gap-2 rounded-lg border border-[#dce7df] bg-white px-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                >
+                  <span className="text-base font-bold">⌘</span>
+                  GitHub দিয়ে চালিয়ে যান
+                </Button>
+              </div>
+
+              {/* Sign Up Link */}
+              <p className="w-full text-center text-sm text-gray-600">
+                অ্যাকাউন্ট নেই?{" "}
+                <Link
+                  href="/sign-up"
+                  className="font-semibold text-[#008d46] transition hover:text-[#006d36] hover:underline"
+                >
+                  সাইন আপ করুন
+                </Link>
+              </p>
+            </Form>
+          </div>
+
+          {/* Home Page Link */}
+          <Link
+            href="/"
+            className="mt-6 text-sm text-gray-500 transition hover:text-[#008d46]"
+          >
+            ← হোম পেজে ফিরে যান
+          </Link>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t border-[#e1e9e3] bg-white px-5 py-5">
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-center text-xs text-gray-500 sm:flex-row sm:text-left">
+            <p>বাজার দর — প্রতিদিনের বাজারদর জানুন সহজেই।</p>
+
+            <p>
+              সঠিক বাজার তথ্য, সচেতন কেনাকাটা এবং সাশ্রয়ী জীবন।
+            </p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
 };
 
 export default SignInFromPage;

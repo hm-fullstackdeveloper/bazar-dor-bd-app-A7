@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -33,6 +34,7 @@ export default function RootLayout({
   
 >
       <body className="flex min-h-full flex-col bg-brand-light">
+         <Toaster position="top-right" />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Fotter/>
